@@ -31,3 +31,33 @@ The **Math Learning Website** was built to make mathematics more approachable an
 
 ## 📁 Project Structure
 
+    matematica-site/
+    │
+    ├── index.html          # Main homepage
+    ├── lessons/            # Topic-based lessons and examples
+    ├── exercises/          # Practice problems and quizzes
+    ├── css/                # Stylesheets
+    ├── js/                 # JavaScript files for interactivity
+    ├── assets/             # Images, icons, and other media
+    └── README.md           # Project documentation
+
+---
+
+## 🚀 How to Run Locally
+
+1. **Clone the repository:**
+    
+        git clone https://github.com/your-username/math-site.git
+
+2. **Navigate into the project folder:**
+    
+        cd math-site
+
+3. **Open the main page:**  
+   Open `index.html` directly in your browser, or use a local server:
+    
+        python -m http.server 8080
+
+   Then go to http://localhost:8080 in your browser.
+
+
