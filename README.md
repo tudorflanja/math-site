@@ -60,4 +60,11 @@ The **Math Learning Website** was built to make mathematics more approachable an
 
    Then go to http://localhost:8080 in your browser.
 
+---
 
+## 💡 Future Improvements
+
+- Add backend support for user authentication and progress tracking  
+- Include more interactive visualizations (graphs, equations, animations)  
+- Implement a database for saving quiz results  
+- Add a dark mode for better accessibility
