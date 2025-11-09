@@ -1,0 +1,13 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#90cdf4"/>
+      <stop offset="1" stop-color="#63b3ed"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="18" fill="url(#g)"/>
+  <g fill="#ffffff">
+    <text x="90" y="95" font-size="64" text-anchor="middle" font-family="Georgia,serif">π</text>
+  </g>
+</svg>

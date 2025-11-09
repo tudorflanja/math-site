@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <title>Matematică • Contact</title>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+
+</head>
+<body>
+  
+<nav class="site-nav">
+  <a class="brand" href="index.html">𝓜atematică</a>
+  <ul>
+      <li><a href="index.html">Acasă</a></li>
+      <li><a href="geometrie.html">Geometrie</a></li>
+      <li><a href="algebra.html">Algebră</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="aleator.html">Tablou 2D</a></li>
+      <li><a href="clasa.html">Clasă JS</a></li>
+      <li><a href="afisor_xt.html">afisor_xt</a></li>
+  </ul>
+</nav>
+
+  <main class="container">
+    <h1>Trimite feedback</h1>
+    <p>Spune-ne ce capitole ai vrea să dezvoltăm sau ce nu ți-a fost clar.</p>
+
+    <form class="contact-form" action="#" method="post">
+      <div class="field">
+        <label for="nume">Nume</label>
+        <input id="nume" name="nume" type="text" placeholder="Numele tău" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="adresa@exemplu.ro" required />
+      </div>
+
+      <div class="field">
+        <label for="materie">Materie preferată</label>
+        <select id="materie" name="materie">
+          <option>Algebră</option>
+          <option>Geometrie</option>
+          <option>Analiză</option>
+          <option>Trigonometrie</option>
+        </select>
+      </div>
+
+      <fieldset class="field">
+        <legend>Nivel</legend>
+        <label><input type="radio" name="nivel" value="liceu" checked /> Liceu</label>
+        <label><input type="radio" name="nivel" value="facultate" /> Facultate</label>
+      </fieldset>
+
+      <div class="field">
+        <label>Capitole de interes</label>
+        <label><input type="checkbox" name="capitole" value="ecuatii" /> Ecuații</label>
+        <label><input type="checkbox" name="capitole" value="trigonometrie" /> Trigonometrie</label>
+        <label><input type="checkbox" name="capitole" value="geometrie" /> Geometrie</label>
+      </div>
+
+      <div class="field">
+        <label for="mesaj">Mesaj</label>
+        <textarea id="mesaj" name="mesaj" rows="5" placeholder="Scrie aici..."></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">Trimite</button>
+        <button type="reset" class="btn">Reset</button>
+      </div>
+    </form>
+  </main>
+  
+<footer class="site-footer">
+  <p>&copy; 2025 Matematică pentru toți • Proiect demo</p>
+</footer>
+
+</body>
+</html>

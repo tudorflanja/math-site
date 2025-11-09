@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Matematică • Trasarea graficului unei funcții</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+            gap: .75rem;
+            background: #fff;
+            padding: 1rem;
+            border-radius: .75rem
+        }
+
+        canvas {
+            background: #fff;
+            border-radius: .75rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,.05)
+        }
+
+        .note {
+            font-size: .95rem;
+            color: #4a5568
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="site-nav">
+        <a class="brand" href="index.html">𝓜atematică</a>
+        <ul>
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="geometrie.html">Geometrie</a></li>
+            <li><a href="algebra.html">Algebră</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="aleator.html">Tablou 2D</a></li>
+            <li><a href="clasa.html">Clasă JS</a></li>
+            <li><a href="afisor_xt.html" aria-current="page">afisor_xt</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h1>Trasarea graficului unei funcții reale</h1>
+        <p>
+            Aplicația ilustrează modul în care putem reprezenta grafic o funcție reală de o variabilă,
+            prin eșantionare uniformă pe un interval dat. Exemplul implicit este
+            <code>f(x) = (1 - e^x) · sin(k·x)</code>, care combină un factor exponențial cu o oscilație sinusoidală.
+        </p>
+        <p class="note">
+            Notă: în câmpul „f(x)” folosește funcții din obiectul <code>Math</code> (ex. <code>Math.exp</code>, <code>Math.sin</code>).
+            Parametrul <code>k</code> este disponibil în expresie.
+        </p>
+
+        <div class="controls">
+            <div class="field"><label>Definiția funcției f(x)</label><input id="fx" type="text" value="(1 - Math.exp(x))*Math.sin(k*x)"></div>
+            <div class="field"><label>Parametru k</label><input id="k" type="number" value="30" step="1"></div>
+            <div class="field"><label>Capăt stâng al intervalului (x<sub>min</sub>)</label><input id="xmin" type="number" value="-1.5" step="0.1"></div>
+            <div class="field"><label>Capăt drept al intervalului (x<sub>max</sub>)</label><input id="xmax" type="number" value="1.5" step="0.1"></div>
+            <div class="field"><label>Număr de puncte (eșantioane)</label><input id="n" type="number" value="1200" min="50"></div>
+            <div class="actions"><button id="draw" class="btn primary">Desenează graficul</button></div>
+        </div>
+
+        <canvas id="plot" width="900" height="360" aria-label="Graficul funcției"></canvas>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Matematică pentru toți • Proiect demo</p>
+    </footer>
+
+    <script>
+        /** Clasa afisor_xt: trasare y=f(x) pe un canvas HTML5 */
+        class AfisorXT {
+            constructor(canvas) {
+                this.ctx = canvas.getContext('2d');
+                this.w = canvas.width; this.h = canvas.height;
+            }
+            clear() { this.ctx.clearRect(0, 0, this.w, this.h); }
+
+            drawAxes(x0, y0) {
+                const ctx = this.ctx;
+                ctx.save();
+                ctx.strokeStyle = '#e2e8f0';
+                for (let x = 0; x <= this.w; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, this.h); ctx.stroke(); }
+                for (let y = 0; y <= this.h; y += 50) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(this.w, y); ctx.stroke(); }
+                ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(this.w, y0); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, this.h); ctx.stroke();
+                ctx.restore();
+            }
+
+            plotFunction(f, xmin, xmax, samples) {
+                const ctx = this.ctx;
+                this.clear();
+
+                const padding = 30;
+                const w = this.w - 2 * padding, h = this.h - 2 * padding;
+                const x0 = padding, y0 = padding;
+
+                const xs = Array.from({ length: samples }, (_, i) => xmin + i * (xmax - xmin) / (samples - 1));
+                const ys = xs.map(x => {
+                    try { const y = f(x); return Number.isFinite(y) ? y : NaN; }
+                    catch (e) { return NaN; }
+                });
+                const yValid = ys.filter(y => Number.isFinite(y));
+                const ymin = yValid.length ? Math.min(...yValid) : -1;
+                const ymax = yValid.length ? Math.max(...yValid) : 1;
+                const yspan = (ymax - ymin) || 1;
+
+                const X = x => x0 + (x - xmin) * w / (xmax - xmin);
+                const Y = y => y0 + h - (y - ymin) * h / yspan;
+
+                const xAxisY = (0 >= ymin && 0 <= ymax) ? Y(0) : Y(ymin);
+                const yAxisX = (0 >= xmin && 0 <= xmax) ? X(0) : X(xmin);
+                this.drawAxes(yAxisX, xAxisY);
+
+                ctx.save();
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                let started = false;
+                for (let i = 0; i < xs.length; i++) {
+                    const y = ys[i];
+                    if (!Number.isFinite(y)) { started = false; continue; }
+                    const sx = X(xs[i]), sy = Y(y);
+                    if (!started) { ctx.moveTo(sx, sy); started = true; }
+                    else { ctx.lineTo(sx, sy); }
+                }
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+        window.afisor_xt = AfisorXT;
+
+        const canvas = document.getElementById('plot');
+        const afisor = new AfisorXT(canvas);
+
+        function makeFunction(expr, k) {
+            const body = `with (Math) { const k=${k}; return (${expr}); }`;
+            return new Function('x', body);
+        }
+
+        document.getElementById('draw').addEventListener('click', () => {
+            const expr = document.getElementById('fx').value;
+            const k = parseFloat(document.getElementById('k').value);
+            const xmin = parseFloat(document.getElementById('xmin').value);
+            const xmax = parseFloat(document.getElementById('xmax').value);
+            const n = Math.max(50, parseInt(document.getElementById('n').value || '600', 10));
+            const f = makeFunction(expr, k);
+            afisor.plotFunction(f, xmin, xmax, n);
+        });
+
+        document.getElementById('draw').click();
+    </script>
+
+</body>
+</html>

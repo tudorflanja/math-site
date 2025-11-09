@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Matematică • Operații cu fracții (clasă JS)</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+            gap: .75rem;
+            background: #fff;
+            padding: 1rem;
+            border-radius: .75rem;
+            margin-bottom: 1rem
+        }
+
+        .result {
+            background: #fff;
+            padding: 1rem;
+            border-radius: .75rem
+        }
+
+        code {
+            background: #f7fafc;
+            padding: .15rem .25rem;
+            border-radius: .3rem
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="site-nav">
+        <a class="brand" href="index.html">𝓜atematică</a>
+        <ul>
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="geometrie.html">Geometrie</a></li>
+            <li><a href="algebra.html">Algebră</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="aleator.html">Tablou 2D</a></li>
+            <li><a href="clasa.html" aria-current="page">Clasă JS</a></li>
+            <li><a href="afisor_xt.html">afisor_xt</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h1>Operații cu fracții — o implementare orientată pe obiecte</h1>
+        <p>
+            Mai jos folosim o clasă proprie, <code>Fractie</code>, pentru a realiza operații aritmetice de bază
+            (adunare, scădere, înmulțire, împărțire) pe fracții reduse la forma ireductibilă.
+            Exemplul ilustrează principiile OOP într-un context matematic elementar.
+        </p>
+
+        <div class="controls">
+            <div class="field"><label>Fracția A — numărător</label><input id="a" type="number" value="1"></div>
+            <div class="field"><label>Fracția A — numitor</label><input id="b" type="number" value="2"></div>
+            <div class="field"><label>Fracția B — numărător</label><input id="c" type="number" value="1"></div>
+            <div class="field"><label>Fracția B — numitor</label><input id="d" type="number" value="3"></div>
+            <div class="actions">
+                <button class="btn primary" id="op_plus">A + B</button>
+                <button class="btn" id="op_minus">A − B</button>
+                <button class="btn" id="op_mul">A × B</button>
+                <button class="btn" id="op_div">A ÷ B</button>
+            </div>
+        </div>
+
+        <section class="result">
+            <h2>Rezultat</h2>
+            <p id="out">(alege o operație pentru a vizualiza rezultatul)</p>
+        </section>
+
+        <section>
+            <h3>Definiția clasei <code>Fractie</code></h3>
+<pre><code>class Fractie {
+  constructor(n, d){
+    if(d === 0) throw new Error('Numitorul nu poate fi 0');
+    this.n = n; this.d = d;
+    this._reduce();
+  }
+  static _gcd(a,b){ return b ? Fractie._gcd(b, a % b) : Math.abs(a); }
+  _reduce(){
+    const g = Fractie._gcd(this.n, this.d);
+    this.n /= g; this.d /= g;
+    if(this.d &lt; 0){ this.n *= -1; this.d *= -1; }
+  }
+  toString(){ return this.d === 1 ? String(this.n) : `${this.n}/${this.d}`; }
+  add(other){ return new Fractie(this.n*other.d + other.n*this.d, this.d*other.d); }
+  sub(other){ return new Fractie(this.n*other.d - other.n*this.d, this.d*other.d); }
+  mul(other){ return new Fractie(this.n*other.n, this.d*other.d); }
+  div(other){ return new Fractie(this.n*other.d, this.d*other.n); }
+}</code></pre>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Matematică pentru toți • Proiect demo</p>
+    </footer>
+
+    <script>
+        class Fractie {
+            constructor(n, d) {
+                if (d === 0) throw new Error('Numitorul nu poate fi 0');
+                this.n = Number(n); this.d = Number(d);
+                this._reduce();
+            }
+            static _gcd(a, b) { a = Math.trunc(a); b = Math.trunc(b); return b ? Fractie._gcd(b, a % b) : Math.abs(a); }
+            _reduce() {
+                const g = Fractie._gcd(this.n, this.d) || 1;
+                this.n /= g; this.d /= g;
+                if (this.d < 0) { this.n *= -1; this.d *= -1; }
+            }
+            toString() { return this.d === 1 ? String(this.n) : `${this.n}/${this.d}`; }
+            add(o) { return new Fractie(this.n * o.d + o.n * this.d, this.d * o.d); }
+            sub(o) { return new Fractie(this.n * o.d - o.n * this.d, this.d * o.d); }
+            mul(o) { return new Fractie(this.n * o.n, this.d * o.d); }
+            div(o) { return new Fractie(this.n * o.d, this.d * o.n); }
+        }
+
+        function readFrac(idN, idD) {
+            return new Fractie(document.getElementById(idN).value, document.getElementById(idD).value);
+        }
+        function show(text) { document.getElementById('out').textContent = text; }
+
+        document.getElementById('op_plus').onclick = () => {
+            const A = readFrac('a', 'b'), B = readFrac('c', 'd');
+            show(`${A.toString()} + ${B.toString()} = ${A.add(B).toString()}`);
+        };
+        document.getElementById('op_minus').onclick = () => {
+            const A = readFrac('a', 'b'), B = readFrac('c', 'd');
+            show(`${A.toString()} − ${B.toString()} = ${A.sub(B).toString()}`);
+        };
+        document.getElementById('op_mul').onclick = () => {
+            const A = readFrac('a', 'b'), B = readFrac('c', 'd');
+            show(`${A.toString()} × ${B.toString()} = ${A.mul(B).toString()}`);
+        };
+        document.getElementById('op_div').onclick = () => {
+            const A = readFrac('a', 'b'), B = readFrac('c', 'd');
+            show(`${A.toString()} ÷ ${B.toString()} = ${A.div(B).toString()}`);
+        };
+    </script>
+
+</body>
+</html>

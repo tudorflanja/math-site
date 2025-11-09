@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Matematică • Tablou bidimensional (generare și afișare)</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+            align-items: end;
+            background: #fff;
+            padding: 1rem;
+            border-radius: .75rem;
+            margin-bottom: 1rem
+        }
+
+            .controls .field {
+                min-width: 160px
+            }
+
+        table.nice td {
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="site-nav">
+        <a class="brand" href="index.html">𝓜atematică</a>
+        <ul>
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="geometrie.html">Geometrie</a></li>
+            <li><a href="algebra.html">Algebră</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="aleator.html" aria-current="page">Tablou 2D</a></li>
+            <li><a href="clasa.html">Clasă JS</a></li>
+            <li><a href="afisor_xt.html">afisor_xt</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h1>Tablou bidimensional: generare aleatorie și afișare</h1>
+        <p>
+            În această aplicație construim un tablou bidimensional de dimensiune \(m \times n\),
+            populat cu valori întregi aleatoare dintr-un interval dat, după care „aplatizăm”
+            structura (extragem toate valorile) și le prezentăm într-un tabel.
+        </p>
+
+        <div class="controls">
+            <div class="field">
+                <label for="rows">Număr de linii (m)</label>
+                <input id="rows" type="number" min="1" value="5">
+            </div>
+            <div class="field">
+                <label for="cols">Număr de coloane (n)</label>
+                <input id="cols" type="number" min="1" value="6">
+            </div>
+            <div class="field">
+                <label for="min">Valoare minimă</label>
+                <input id="min" type="number" value="0">
+            </div>
+            <div class="field">
+                <label for="max">Valoare maximă</label>
+                <input id="max" type="number" value="99">
+            </div>
+            <button id="gen" class="btn primary">Generează tabloul</button>
+            <button id="extract" class="btn">Extrage și afișează</button>
+        </div>
+
+        <section>
+            <h2>Tabloul generat (m × n)</h2>
+            <div id="grid"></div>
+        </section>
+
+        <section>
+            <h2>Valorile extrase (aplatizare)</h2>
+            <div id="flat"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Matematică pentru toți • Proiect demo</p>
+    </footer>
+
+    <script>
+        let matrix = [];
+
+        function randInt(a, b) {
+            return Math.floor(Math.random() * (b - a + 1)) + a;
+        }
+
+        function renderTable(container, data2D) {
+            if (!data2D.length) { container.innerHTML = '<p>(gol)</p>'; return; }
+            const rows = data2D.map(row => '<tr>' + row.map(v => '<td>' + v + '</td>').join('') + '</tr>').join('');
+            container.innerHTML = '<table class="nice"><tbody>' + rows + '</tbody></table>';
+        }
+
+        function renderFlat(container, arr) {
+            if (!arr.length) { container.innerHTML = '<p>(gol)</p>'; return; }
+            const cells = arr.map(v => '<td>' + v + '</td>').join('');
+            container.innerHTML = '<table class="nice"><tbody><tr>' + cells + '</tr></tbody></table>';
+        }
+
+        document.getElementById('gen').addEventListener('click', () => {
+            const m = Math.max(1, parseInt(document.getElementById('rows').value || '1', 10));
+            const n = Math.max(1, parseInt(document.getElementById('cols').value || '1', 10));
+            const mn = parseInt(document.getElementById('min').value || '0', 10);
+            const mx = parseInt(document.getElementById('max').value || '99', 10);
+            matrix = Array.from({ length: m }, () => Array.from({ length: n }, () => randInt(mn, mx)));
+            renderTable(document.getElementById('grid'), matrix);
+            document.getElementById('flat').innerHTML = '';
+        });
+
+        document.getElementById('extract').addEventListener('click', () => {
+            const flat = matrix.flat();
+            renderFlat(document.getElementById('flat'), flat);
+        });
+    </script>
+
+</body>
+</html>
