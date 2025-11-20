@@ -31,15 +31,15 @@ The **Math Learning Website** was built to make mathematics more approachable an
 
 ## 📁 Project Structure
 
-    matematica-site/
-    │
-    ├── index.html          # Main homepage
-    ├── lessons/            # Topic-based lessons and examples
-    ├── exercises/          # Practice problems and quizzes
-    ├── css/                # Stylesheets
-    ├── js/                 # JavaScript files for interactivity
-    ├── assets/             # Images, icons, and other media
-    └── README.md           # Project documentation
+| Path         | Description                        |
+| ------------ | ---------------------------------- |
+| `index.html` | Main homepage                      |
+| `lessons/`   | Topic-based lessons and examples   |
+| `exercises/` | Practice problems and quizzes      |
+| `css/`       | Stylesheets                        |
+| `js/`        | JavaScript files for interactivity |
+| `assets/`    | Images, icons, and other media     |
+| `README.md`  | Project documentation              |
 
 ---
 
